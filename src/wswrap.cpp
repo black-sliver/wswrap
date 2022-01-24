@@ -1,4 +1,5 @@
 #include "../include/wswrap.hpp"
+#include <chrono>
 
 #ifdef __EMSCRIPTEN__
 #include "../subprojects/wsjs/wsjs.hpp"
@@ -71,7 +72,20 @@ WS::~WS()
         if (conn) {
             conn->close(websocketpp::close::status::normal, "");
             conn = nullptr;
-            _service->run(); // wait for connection to close
+            // wait for connection to close -- client.run() will hang if
+            // if the destructor is called from a message callback, so we poll
+            // with timeout instead, possibly leaking the underlying socket
+            auto t = std::chrono::steady_clock::now();
+            while (!client.stopped()) {
+                client.poll();
+                auto td = (std::chrono::steady_clock::now()-t);
+                if (td > std::chrono::milliseconds(500)) break; // timeout
+            }
+            if (!client.stopped()) {
+                printf("wswrap: disconnect timed out. "
+                        "Possibly disconnecting while handling an event.\n");
+                client.stop();
+            }
         }
     } catch (const std::exception& ex) {
         printf("wswrap: exception during close: %s\n", ex.what());
