@@ -43,7 +43,6 @@ WS::WS(const std::string& uri, onopen_handler hopen, onclose_handler hclose, onm
             if (hclose) hclose();
         }
     });
-    client.set_interrupt_handler([this] (...) { printf("intr\n"); });
 
     websocketpp::lib::error_code ec;
     conn = client.get_connection(uri, ec);

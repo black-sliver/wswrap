@@ -21,7 +21,10 @@ private:
 #else
     typedef asio::io_service SERVICE;
     typedef websocketpp::client<websocketpp::config::asio_client> WSClient;
-    typedef std::pair<WSClient,WSClient::connection_ptr> IMPL;
+    typedef struct {
+        WSClient first;
+        WSClient::connection_ptr second;
+    } IMPL;
 #endif
 
 public:
