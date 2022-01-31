@@ -89,7 +89,10 @@ WS::~WS()
     } catch (const std::exception& ex) {
         printf("wswrap: exception during close: %s\n", ex.what());
         conn = nullptr;
+        client.stop();
     }
+    // NOTE: the destructor can not be called from a ws callback in some
+    //       circumstances, otherwise it will hang here. TODO: Document this.
     delete _impl;
     _impl = nullptr;
     delete _service;
