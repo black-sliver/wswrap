@@ -1,7 +1,7 @@
 # wswrap
 
-Wrapper around [https://github.com/zaphoyd/websocketpp](zaphoyd/websocketpp)
-and [https://github.com/black-sliver/wsjs](black-sliver/wsjs) that allows easy
+Wrapper around [zaphoyd/websocketpp](https://github.com/zaphoyd/websocketpp)
+and [black-sliver/wsjs](https://github.com/black-sliver/wsjs) that allows easy
 websocket client use for c++ in desktop and browser (emscripten) context.
 
 ## How to use
@@ -9,9 +9,9 @@ websocket client use for c++ in desktop and browser (emscripten) context.
 * Recusive add submodule to your project or dump contents of the "full source"
     * get the source with `git clone --recurse-submodules https://github.com/black-sliver/wswrap.git`
     * or add it as submodule with `git submodule add https://github.com/black-sliver/wswrap.git; git submodule update --init --recursive`
-* For desktop add [https://github.com/chriskohlhoff/asio](asio) or boost::asio to include paths
+* For desktop add [asio](https://github.com/chriskohlhoff/asio) or boost::asio to include paths
 * For desktop define ASIO_STANDALONE when not using boost
-* For desktop add [https://github.com/zaphoyd/websocketpp](websocketpp) to include paths
+* For desktop add [websocketpp](https://github.com/zaphoyd/websocketpp) to include paths
 * Add wswrap.cpp to source files, include wswrap.hpp
 * For webbrowser
     * events will fire from js event loop
