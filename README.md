@@ -14,7 +14,8 @@ websocket client use for c++ in desktop and browser (emscripten) context.
 * For desktop add [websocketpp](https://github.com/zaphoyd/websocketpp) to include paths
 * Not all websocketpp versions are compatible to all asio versions.
     * [Try those](https://github.com/black-sliver/ap-soeclient/tree/master/subprojects) (download repo as zip and extract)
-* Add wswrap.cpp to source files, include wswrap.hpp
+* Add src/wswrap.cpp as source to your project/Makefile - everything else is header-only
+* Include wswrap.hpp
 * For webbrowser
     * events will fire from js event loop
 * For desktop
