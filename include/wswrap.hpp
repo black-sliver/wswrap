@@ -3,6 +3,7 @@
 
 #include <string>
 #include <functional>
+#include <stdarg.h>
 
 #ifndef __EMSCRIPTEN__
 #include <asio.hpp>
@@ -45,6 +46,14 @@ public:
     size_t run();
 
 private:
+    void warn(const char* fmt, ...)
+    {
+        va_list args;
+        va_start (args, fmt);
+        vfprintf (stderr, fmt, args);
+        va_end (args);
+    }
+
     IMPL *_impl;
 #ifndef __EMSCRIPTEN__
     SERVICE *_service;

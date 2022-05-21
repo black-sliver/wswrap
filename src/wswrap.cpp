@@ -81,13 +81,13 @@ WS::~WS()
                 if (td > std::chrono::milliseconds(500)) break; // timeout
             }
             if (!client.stopped()) {
-                printf("wswrap: disconnect timed out. "
-                        "Possibly disconnecting while handling an event.\n");
+                warn("wswrap: disconnect timed out. "
+                     "Possibly disconnecting while handling an event.\n");
                 client.stop();
             }
         }
     } catch (const std::exception& ex) {
-        printf("wswrap: exception during close: %s\n", ex.what());
+        warn("wswrap: exception during close: %s\n", ex.what());
         conn = nullptr;
         client.stop();
     }
