@@ -20,6 +20,10 @@ websocket client use for c++ in desktop and browser (emscripten) context.
     * events will fire from js event loop
 * For desktop
     * use `::run` or `::poll` on the socket for communication to occur/events to fire
+* On windows
+    * you may have to `#define ASIO_NO_WIN32_LEAN_AND_MEAN` (standalone) or `BOOST_ASIO_NO_WIN32_LEAN_AND_MEAN` (boost)
+      before including wswrap.hpp, move wswrap include before windows.h and define `_WIN32_WINNT` globally.
+    * link against ws2_32
 
 ## API
 
