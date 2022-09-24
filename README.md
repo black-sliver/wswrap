@@ -6,7 +6,7 @@ websocket client use for c++ in desktop and browser (emscripten) context.
 
 ## How to use
 
-* Recusive add submodule to your project or dump contents of the "full source"
+* Recursive add submodule to your project or dump contents of the "full source"
     * get the source with `git clone --recurse-submodules https://github.com/black-sliver/wswrap.git`
     * or add it as submodule with `git submodule add https://github.com/black-sliver/wswrap.git; git submodule update --init --recursive`
 * For desktop add [asio](https://github.com/chriskohlhoff/asio) or boost::asio to include paths
