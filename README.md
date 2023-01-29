@@ -14,6 +14,7 @@ websocket client use for c++ in desktop and browser (emscripten) context.
 * For desktop add [websocketpp](https://github.com/zaphoyd/websocketpp) to include paths
 * Not all websocketpp versions are compatible to all asio versions.
     * [Try those](https://github.com/black-sliver/ap-soeclient/tree/master/subprojects) (download repo as zip and extract)
+* For desktop with SSL support, link against OpenSSL (libssl and libcrypto), or `#define WSWRAP_NO_SSL` to disable SSL support
 * Include wswrap.hpp - it's header-only
 * For webbrowser
     * events will fire from js event loop
@@ -23,6 +24,7 @@ websocket client use for c++ in desktop and browser (emscripten) context.
     * you may have to `#define ASIO_NO_WIN32_LEAN_AND_MEAN` (standalone) or `BOOST_ASIO_NO_WIN32_LEAN_AND_MEAN` (boost)
       before including wswrap.hpp, move wswrap include before windows.h and define `_WIN32_WINNT` globally.
     * link against ws2_32
+    * when using SSL, also link against crypt32
 
 ## API
 
@@ -38,15 +40,15 @@ Constructor will start connecting and at some point the object fires
 
 Destructor will close the socket.
 
-`void send(const std::string& data);`
+`bool/void send(const std::string& data);`
 
 Send data on the websocket. Defaults to send_text.
 
-`void send_text(const std::string& data);`
+`bool/void send_text(const std::string& data);`
 
 Send data as text frame on the websocket.
 
-`void send_binary(const std::string& data);`
+`bool/void send_binary(const std::string& data);`
 
 Send data as binary frame on the websocket.
 
@@ -59,3 +61,9 @@ Send data as binary frame on the websocket.
 
 * Desktop: poll() until the socket is closed
 * Webbrowser: no-op; use `#ifdef __EMSCRIPTEN__` to decide if ::run() is usable.
+
+### Changes
+
+#### v1.01
+
+`send`/`send_*` will now return bool. If `WSWRAP_SEND_EXCEPTIONS` is defined, they will throw exceptions as before.
