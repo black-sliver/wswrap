@@ -154,6 +154,11 @@ namespace wswrap {
             return _service->run();
         }
 
+        void stop()
+        {
+            _service->stop();
+        }
+
     private:
         template<class T>
         T* init(onopen_handler hopen, onclose_handler hclose, onmessage_handler hmessage, onerror_handler herror)

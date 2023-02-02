@@ -54,12 +54,12 @@ Send data as binary frame on the websocket.
 
 `bool poll();`
 
-* Desktop: handle queued incoming and outgoing data, callbacks are fired from here
+* Desktop: handle queued incoming and outgoing data, callbacks are fired from here.
 * Webbrowser: no-op
 
 `size_t run();`
 
-* Desktop: poll() until the socket is closed
+* Desktop: poll() until the socket is closed, you can call stop() to close it.
 * Webbrowser: no-op; use `#ifdef __EMSCRIPTEN__` to decide if ::run() is usable.
 
 ### Changes
