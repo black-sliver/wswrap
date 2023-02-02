@@ -40,6 +40,9 @@ Constructor will start connecting and at some point the object fires
 
 Destructor will close the socket.
 
+By default, this can't be run from a callback (onerror, onclose, onmessage), but you can `#define WSWRAP_ASYNC_CLEANUP`
+to have it create a detached thread for the cleanup.
+
 `bool/void send(const std::string& data);`
 
 Send data on the websocket. Defaults to send_text.

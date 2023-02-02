@@ -26,6 +26,9 @@
 #ifdef _WIN32
 #include <wincrypt.h>
 #endif
+#ifdef WSWRAP_ASYNC_CLEANUP
+#include <thread>
+#endif
 
 
 namespace wswrap {
@@ -146,12 +149,18 @@ namespace wswrap {
 
         bool poll()
         {
-            return _service->poll();
+            _polling = true;
+            auto res = _service->poll();
+            _polling = false;
+            return res;
         }
 
         size_t run()
         {
-            return _service->run();
+            _polling = true;
+            auto res = _service->run();
+            _polling = false;
+            return res;
         }
 
         void stop()
@@ -319,6 +328,13 @@ namespace wswrap {
         template<class T>
         void cleanup()
         {
+            #if defined _WIN32 && !defined WSWRAP_ASYNC_CLEANUP && defined __cpp_exceptions
+            // NOTE: the destructor can not be called from a ws callback in some
+            //       circumstances, otherwise it will hang at delete impl on Windows.
+            if (_polling) {
+                throw std::runtime_error("Cannot delete WS from a callback unless WSWRAP_ASYNC_CLEANUP is defined!");
+            }
+            #endif
             T* impl = (T*)_impl;
             auto& client = impl->first;
             auto& conn = impl->second;
@@ -350,12 +366,33 @@ namespace wswrap {
                 conn = nullptr;
                 client.stop();
             }
-            // NOTE: the destructor can not be called from a ws callback in some
-            //       circumstances, otherwise it will hang here. TODO: Document this.
+            #ifdef WSWRAP_ASYNC_CLEANUP
+            if (_polling) {
+                auto service = _service;
+                std::thread([impl, service]() {
+                    delete impl;
+                    delete service;
+                }).detach();
+                _impl = nullptr;
+                _service = nullptr;
+            } else {
+                delete impl;
+                _impl = nullptr;
+                delete _service;
+                _service = nullptr;
+            }
+            #else
+            if (_polling) {
+                warn("Cannot delete WS from a callback on all platforms unless WSWRAP_ASYNC_CLEANUP is defined!\n");
+                #ifdef _WIN32
+                return;
+                #endif
+            }
             delete impl;
             _impl = nullptr;
             delete _service;
             _service = nullptr;
+            #endif
         }
 
         void cleanup()
@@ -395,6 +432,7 @@ namespace wswrap {
         void *_impl;
         SERVICE *_service;
         bool _secure;
+        bool _polling = false;
     };
 
 }; // namespace wsrap
