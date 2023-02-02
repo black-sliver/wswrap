@@ -40,18 +40,18 @@ namespace wswrap {
         typedef websocketpp::client<websocketpp::config::asio_tls_client> WSSClient;
         typedef asio::ssl::context SSLContext;
         typedef std::shared_ptr<SSLContext> SSLContextPtr;
-        typedef struct {
+        struct WSS_IMPL {
             typedef WSSClient Client;
             Client first;
             Client::connection_ptr second;
-        } WSS_IMPL;
+        };
 #endif
         typedef websocketpp::client<websocketpp::config::asio_client> WSClient;
-        typedef struct {
+        struct WS_IMPL {
             typedef WSClient Client;
             Client first;
             Client::connection_ptr second;
-        } WS_IMPL;
+        };
 
     public:
         typedef std::function<void(void)> onopen_handler;
@@ -245,7 +245,7 @@ namespace wswrap {
                     if (store_path.empty() || !!ec) {
 #ifdef _WIN32
                         // try to load certs from windows ca store
-                        HCERTSTORE hStore = CertOpenSystemStore(0, "ROOT");
+                        HCERTSTORE hStore = CertOpenSystemStoreA(0, "ROOT");
                         if (hStore) {
                             X509_STORE* store = X509_STORE_new();
                             PCCERT_CONTEXT cert = NULL;
