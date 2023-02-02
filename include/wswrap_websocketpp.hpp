@@ -235,6 +235,8 @@ namespace wswrap {
                 ctx->set_options(SSLContext::default_workarounds |
                                  SSLContext::no_sslv2 |
                                  SSLContext::no_sslv3 |
+                                 SSLContext::no_tlsv1 |
+                                 SSLContext::no_tlsv1_1 |
                                  SSLContext::single_dh_use, ec);
                 if (ec) warn("Error in ssl init: options: %s\n", ec.message().c_str());
                 if (validate_cert) {
