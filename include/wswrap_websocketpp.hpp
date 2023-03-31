@@ -213,8 +213,6 @@ namespace wswrap {
             auto* impl = init<WS_IMPL>(hopen, hclose, hmessage, herror);
             _impl = impl;
             if (!impl) return false;
-            auto& client = impl->first;
-            auto& conn = impl->second;
             return true;
         }
 
