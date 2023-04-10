@@ -224,7 +224,6 @@ namespace wswrap {
             _impl = impl;
             if (!impl) return false;
             auto& client = impl->first;
-            auto& conn = impl->second;
 
             std::string store_path = cert_store; // make a copy for capture
             client.set_tls_init_handler([this, validate_cert, store_path] (std::weak_ptr<void>) -> SSLContextPtr {
