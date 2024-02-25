@@ -252,7 +252,7 @@ namespace wswrap {
             });
             client.set_pong_timeout_handler([this] (websocketpp::connection_hdl hdl, const std::string&) {
                 T* impl = (T*)_impl;
-                if (impl->second) {
+                if (impl->second && impl->second->get_state() < websocketpp::session::state::closing) {
                     impl->second->close(websocketpp::close::status::internal_endpoint_error, "ping timeout");
                 }
             });
@@ -388,6 +388,8 @@ namespace wswrap {
                 throw std::runtime_error("Cannot delete WS from a callback unless WSWRAP_ASYNC_CLEANUP is defined!");
             }
             #endif
+            if (_ping_timer)
+                _ping_timer.reset(nullptr);
             T* impl = (T*)_impl;
             auto& client = impl->first;
             auto& conn = impl->second;
