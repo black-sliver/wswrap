@@ -2,7 +2,7 @@
 #ifndef _WSWRAP_HPP
 #define _WSWRAP_HPP
 
-#define WSWRAP_VERSION 10200  // 1.02.00
+#define WSWRAP_VERSION 10300  // 1.03.00
 
 #ifdef __EMSCRIPTEN__
 #include "wswrap_wsjs.hpp"

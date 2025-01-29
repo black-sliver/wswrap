@@ -15,6 +15,7 @@ websocket client use for c++ in desktop and browser (emscripten) context.
 * Not all websocketpp versions are compatible to all asio versions.
     * [Try those](https://github.com/black-sliver/ap-soeclient/tree/master/subprojects) (download repo as zip and extract)
 * For desktop with SSL support, link against OpenSSL (libssl and libcrypto), or `#define WSWRAP_NO_SSL` to disable SSL support
+* For desktop with compression support, link against zlib (libz), or `#define WSRWAP_NO_COMPRESSION` to disable compression support
 * Include wswrap.hpp - it's header-only
 * For webbrowser
     * events will fire from js event loop
@@ -75,3 +76,8 @@ Send data as binary frame on the websocket.
 
 * Automatically send pings on desktop (not JS) if the server doesn't.
 * error handler callback now optionally has a `const std::string&` argument for a readable error message
+
+#### v1.03
+
+* Avoid ping timeout and exception during shutdown
+* Add support for compression
