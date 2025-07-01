@@ -241,18 +241,18 @@ namespace wswrap {
             client.init_asio(_service);
 
             typedef typename T::Client::message_ptr message_ptr;
-            client.set_message_handler([this] (websocketpp::connection_hdl hdl, message_ptr msg) {
+            client.set_message_handler([this] (websocketpp::connection_hdl, const message_ptr& msg) {
                 T* impl = (T*)_impl;
                 if (impl->second && _hmessage) _hmessage(msg->get_payload());
             });
-            client.set_open_handler([this] (websocketpp::connection_hdl hdl) {
+            client.set_open_handler([this] (websocketpp::connection_hdl) {
                 T* impl = (T*)_impl;
                 if (impl->second && _hopen) _hopen();
                 _ping_timer.reset(new asio::high_resolution_timer(*_service));
                 _ping_timer->expires_from_now(std::chrono::milliseconds(_ping_interval));
                 _ping_timer->async_wait([=](const asio::error_code& ec) { on_ping_expired<T>(ec); });                
             });
-            client.set_close_handler([this] (websocketpp::connection_hdl hdl) {
+            client.set_close_handler([this] (websocketpp::connection_hdl) {
                 T* impl = (T*)_impl;
                 if (impl->second) {
                     impl->second = nullptr;
@@ -272,13 +272,13 @@ namespace wswrap {
                 if (_ping_timer)
                     _ping_timer.reset(nullptr);
             });
-            client.set_ping_handler([this] (websocketpp::connection_hdl hdl, const std::string&) {
+            client.set_ping_handler([this] (websocketpp::connection_hdl, const std::string&) {
                 // reset ping timer - no need to ping the server if the server pings us
                 if (_ping_timer)
                     _ping_timer->expires_from_now(std::chrono::milliseconds(_ping_interval));
                 return true;
             });
-            client.set_pong_timeout_handler([this] (websocketpp::connection_hdl hdl, const std::string&) {
+            client.set_pong_timeout_handler([this] (websocketpp::connection_hdl, const std::string&) {
                 T* impl = (T*)_impl;
                 if (impl->second && impl->second->get_state() < websocketpp::session::state::closing) {
                     impl->second->close(websocketpp::close::status::internal_endpoint_error, "ping timeout");
